@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Input Data Premium - ZANJABIL</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #ffffff;
+            
+            /* MEMBUAT KONTEN DI TENGAH LAYAR (CENTER SEPENUHNYA) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            
+            /* Background abstrak efek awan/nebula kombinasi Hitam & Emas */
+            background-color: #0b0a07;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(170, 132, 27, 0.2) 0%, transparent 45%),
+                radial-gradient(circle at 40% 80%, rgba(230, 202, 115, 0.12) 0%, transparent 60%),
+                radial-gradient(circle at 85% 75%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                linear-gradient(180deg, #0d0d0d 0%, #1a160e 50%, #050505 100%);
+            background-attachment: fixed;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: rgba(26, 26, 26, 0.85); /* Efek kaca transparan */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.1);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-sizing: border-box;
+        }
+        
+        .header-brand {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #f3e0aa 0%, #d4af37 50%, #aa841b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+        }
+        
+        h2 { 
+            text-align: center; 
+            color: #cccccc; 
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e6ca73;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        input[type="text"], input[type="tel"], input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: rgba(20, 20, 20, 0.8);
+            color: #ffffff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus, input[type="tel"]:focus, input[type="number"]:focus {
+            border-color: #d4af37;
+            outline: none;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+            background-color: rgba(30, 30, 30, 0.9);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-add { 
+            background: linear-gradient(135deg, #ffe596 0%, #d4af37 50%, #b38f24 100%); 
+            color: #0b0a07; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+        
+        .btn-add:hover { 
+            background: linear-gradient(135deg, #ffffff 0%, #e6ca73 50%, #d4af37 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        .btn-export { 
+            background-color: rgba(35, 35, 35, 0.6); 
+            color: #d4af37;
+            border: 1px solid #d4af37;
+        }
+        
+        .btn-export:hover { 
+            background-color: rgba(212, 175, 55, 0.15);
+            color: #ffe596;
+            transform: translateY(-2px);
+        }
+
+        .catatan-konfirmasi {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #e6ca73;
+            font-style: italic;
+            letter-spacing: 0.5px;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #d4af37;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 35px;
+            background: rgba(25, 25, 25, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        th { 
+            background-color: rgba(45, 38, 19, 0.85); 
+            color: #e6ca73;
+            font-weight: 600;
+            border-bottom: 2px solid #d4af37;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+        
+        td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #e0e0e0;
+        }
+        
+        .sensor-text {
+            color: #8a8471;
+            font-style: italic;
+            letter-spacing: 3px;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(40, 40, 40, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-brand">ZANJABIL</div>
+    <h2>Sensus Data Privat.angkatan</h2>
+    
+    <form id="dataForm">
+        <div class="form-group">
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" required placeholder="Contoh: Ahmad Subari" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="alamat">Alamat Tinggal</label>
+            <input type="text" id="alamat" required placeholder="Contoh: Jl. Merdeka No. 12" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="telepon">Nomor Telepon</label>
+            <input type="tel" id="telepon" required placeholder="Contoh: 08123456789" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="donasi">Jumlah Donasi (Rp)</label>
+            <input type="number" id="donasi" required placeholder="Contoh: 50000" autocomplete="off">
+        </div>
+        
+        <div class="btn-group">
+            <button type="button" class="btn-add" onclick="tambahData()">Tambah Data</button>
+            <button type="button" class="btn-export" onclick="unduhExcel()">Unduh File Excel</button>
+        </div>
+
+        <div class="catatan-konfirmasi">
+            Untuk konfirmasi transfer ke nomor 089677203048
+        </div>
+    </form>
+
+    <table id="tabelData">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Alamat (Privat)</th>
+                <th>Nomor Telepon</th>
+                <th>Donasi</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+</div>
+
+<script>
+    let kumpulanData = [];
+
+    function buatSensorAlamat(alamat) {
+        if (alamat.length <= 5) {
+            return "••••••••";
+        }
+        return alamat.substring(0, 5) + " ••••••••";
+    }
+
+    // Fungsi format rupiah untuk tampilan tabel agar rapi
+    function formatRupiah(angka) {
+        return "Rp " + parseInt(angka).toLocaleString('id-ID');
+    }
+
+    function tambahData() {
+        const nama = document.getElementById('nama').value.trim();
+        const alamat = document.getElementById('alamat').value.trim();
+        const telepon = document.getElementById('telepon').value.trim();
+        const donasi = document.getElementById('donasi').value.trim();
+
+        if (nama === '' || alamat === '' || telepon === '' || donasi === '') {
+            alert('Mohon lengkapi seluruh kolom input terlebih dahulu!');
+            return;
+        }
+
+        kumpulanData.push({
+            "Nama": nama,
+            "Alamat": alamat,
+            "Nomor Telepon": telepon,
+            "Jumlah Donasi": parseInt(donasi)
+        });
+
+        const alamatSensor = buatSensorAlamat(alamat);
+        const donasiFormat = formatRupiah(donasi);
+        const tbody = document.querySelector('#tabelData tbody');
+        const row = `<tr>
+            <td>${nama}</td>
+            <td class="sensor-text">${alamatSensor}</td>
+            <td>'${telepon}</td> 
+            <td>${donasiFormat}</td> 
+        </tr>`;
+        
+        tbody.innerHTML += row;
+        document.getElementById('dataForm').reset();
+    }
+
+    function unduhExcel() {
+        if (kumpulanData.length === 0) {
+            alert('Tidak ada data yang tersedia untuk diunduh!');
+            return;
+        }
+
+        const worksheet = XLSX.utils.json_to_sheet(kumpulanData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data Donasi");
+
+        XLSX.writeFile(workbook, "Data_Donasi_Zanjabil.xlsx");
+
+        // Pembersihan memori untuk privasi setelah berhasil download
+        kumpulanData = []; 
+        document.querySelector('#tabelData tbody').innerHTML = '';
+        alert('Ekspor Berhasil! Seluruh data di memori browser telah dibersihkan demi privasi keamanan.');
+    }
+</script>
+
+</body>
+</html>
