@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Input Data Premium - ZANJABIL</title>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <title>Sistem Data & Donasi - ZANJABIL</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,14 +11,12 @@
             padding: 20px;
             min-height: 100vh;
             color: #ffffff;
-            
-            /* MEMBUAT KONTEN DI TENGAH LAYAR (CENTER SEPENUHNYA) */
             display: flex;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
             
-            /* Background abstrak efek awan/nebula kombinasi Hitam & Emas */
+            /* Background Awan Emas & Hitam */
             background-color: #0b0a07;
             background-image: 
                 radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
@@ -32,13 +29,13 @@
         
         .container {
             width: 100%;
-            max-width: 650px;
-            background: rgba(26, 26, 26, 0.85); /* Efek kaca transparan */
+            max-width: 500px;
+            background: rgba(26, 26, 26, 0.85);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             border: 1px solid rgba(212, 175, 55, 0.4);
             box-sizing: border-box;
         }
@@ -53,22 +50,49 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 5px;
             text-transform: uppercase;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
         }
         
-        h2 { 
-            text-align: center; 
-            color: #cccccc; 
-            font-size: 16px;
-            margin-top: 0;
-            margin-bottom: 35px;
-            font-weight: 400;
-            letter-spacing: 2px;
+        /* MENU TIGA TOMBOL UTAMA */
+        .tab-menu {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 12px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 5px;
+            background: none;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #cccccc;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 11px;
+            border-radius: 6px;
             text-transform: uppercase;
+            text-align: center;
+            transition: all 0.3s;
         }
         
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ffe596 0%, #d4af37 50%, #b38f24 100%);
+            color: #0b0a07;
+            border: none;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* STYLE INPUT FORM */
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
         
         label {
@@ -77,7 +101,6 @@
             font-weight: 600;
             color: #e6ca73;
             font-size: 13px;
-            letter-spacing: 0.5px;
             text-transform: uppercase;
         }
         
@@ -90,115 +113,103 @@
             background-color: rgba(20, 20, 20, 0.8);
             color: #ffffff;
             font-size: 15px;
-            transition: all 0.3s ease;
         }
         
         input[type="text"]:focus, input[type="tel"]:focus, input[type="number"]:focus {
             border-color: #d4af37;
             outline: none;
             box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
-            background-color: rgba(30, 30, 30, 0.9);
         }
         
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        button {
-            flex: 1;
-            padding: 15px;
+        .btn-action {
+            width: 100%;
+            padding: 16px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-        
-        .btn-add { 
             background: linear-gradient(135deg, #ffe596 0%, #d4af37 50%, #b38f24 100%); 
             color: #0b0a07; 
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
         }
-        
-        .btn-add:hover { 
-            background: linear-gradient(135deg, #ffffff 0%, #e6ca73 50%, #d4af37 100%);
+
+        .btn-action:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
         }
         
-        .btn-export { 
-            background-color: rgba(35, 35, 35, 0.6); 
-            color: #d4af37;
-            border: 1px solid #d4af37;
-        }
-        
-        .btn-export:hover { 
-            background-color: rgba(212, 175, 55, 0.15);
-            color: #ffe596;
-            transform: translateY(-2px);
-        }
-
         .catatan-konfirmasi {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
             font-size: 13px;
             color: #e6ca73;
-            font-style: italic;
-            letter-spacing: 0.5px;
+            font-weight: 500;
             background: rgba(212, 175, 55, 0.1);
-            padding: 10px;
-            border-radius: 6px;
-            border-left: 3px solid #d4af37;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #d4af37;
+            line-height: 1.4;
         }
         
-        table {
+        /* STYLE SUB-MENU WIRID (ACCORDION) */
+        .sub-menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .btn-option {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 35px;
-            background: rgba(25, 25, 25, 0.7);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-        }
-        
-        th, td {
-            padding: 14px 18px;
+            padding: 14px;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #e6ca73;
+            border-radius: 8px;
             text-align: left;
             font-size: 14px;
-        }
-        
-        th { 
-            background-color: rgba(45, 38, 19, 0.85); 
-            color: #e6ca73;
             font-weight: 600;
-            border-bottom: 2px solid #d4af37;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-option::after {
+            content: '▼';
+            font-size: 10px;
+        }
+
+        .btn-option.active::after {
+            content: '▲';
         }
         
-        td {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #e0e0e0;
+        .bacaan-content {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-top: none;
+            padding: 15px;
+            border-radius: 0 0 8px 8px;
+            margin-top: -13px;
+            margin-bottom: 5px;
         }
         
-        .sensor-text {
-            color: #8a8471;
+        .arabic {
+            font-size: 22px;
+            text-align: right;
+            margin: 12px 0;
+            line-height: 2;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .arti {
+            font-size: 12px;
+            color: #bbbbbb;
             font-style: italic;
-            letter-spacing: 3px;
-        }
-        
-        tr:last-child td {
-            border-bottom: none;
-        }
-        
-        tr:nth-child(even) {
-            background-color: rgba(40, 40, 40, 0.4);
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -206,113 +217,165 @@
 
 <div class="container">
     <div class="header-brand">ZANJABIL</div>
-    <h2>Sensus Data Privat.angkatan</h2>
+    <div style="text-align: center; color: #aaa; font-size: 12px; margin-bottom: 20px; letter-spacing: 1px;">SISTEM DATA INTEGRASI</div>
     
-    <form id="dataForm">
-        <div class="form-group">
-            <label for="nama">Nama Lengkap</label>
-            <input type="text" id="nama" required placeholder="Contoh: Ahmad Subari" autocomplete="off">
-        </div>
-        <div class="form-group">
-            <label for="alamat">Alamat Tinggal</label>
-            <input type="text" id="alamat" required placeholder="Contoh: Jl. Merdeka No. 12" autocomplete="off">
-        </div>
-        <div class="form-group">
-            <label for="telepon">Nomor Telepon</label>
-            <input type="tel" id="telepon" required placeholder="Contoh: 08123456789" autocomplete="off">
-        </div>
-        <div class="form-group">
-            <label for="donasi">Jumlah Donasi (Rp)</label>
-            <input type="number" id="donasi" required placeholder="Contoh: 50000" autocomplete="off">
-        </div>
-        
-        <div class="btn-group">
-            <button type="button" class="btn-add" onclick="tambahData()">Tambah Data</button>
-            <button type="button" class="btn-export" onclick="unduhExcel()">Unduh File Excel</button>
-        </div>
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchTab('update-data')">1. Update Data</button>
+        <button class="tab-btn" onclick="switchTab('donasi')">2. Menu Donasi</button>
+        <button class="tab-btn" onclick="switchTab('doa')">3. Wirid & Doa</button>
+    </div>
+    
+    <div id="tab-update-data" class="tab-content active">
+        <form id="formUpdateData">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" required placeholder="Masukkan nama lengkap" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="alamat">Alamat Lengkap</label>
+                <input type="text" id="alamat" required placeholder="Masukkan alamat tinggal" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="telepon">Nomor Telepon / WA</label>
+                <input type="tel" id="telepon" required placeholder="Contoh: 08123456789" autocomplete="off">
+            </div>
+            <button type="button" class="btn-action" onclick="simpanProfil Sementara()">Simpan Profil</button>
+        </form>
+    </div>
+    
+    <div id="tab-donasi" class="tab-content">
+        <form id="formDonasi">
+            <div class="form-group">
+                <label for="donasi">Nominal Donasi (Rp)</label>
+                <input type="number" id="donasi" required placeholder="Masukkan nominal angka (Contoh: 50000)" autocomplete="off">
+            </div>
+            
+            <button type="button" class="btn-action" onclick="prosesKirimDonasi()">Kirim & Konfirmasi</button>
 
-        <div class="catatan-konfirmasi">
-            Untuk konfirmasi transfer ke nomor 089677203048
+            <div class="catatan-konfirmasi">
+                <strong>INFORMASI TRANSFER:</strong><br>
+                Silakan transfer sesuai nominal ke rekening lembaga.<br>
+                <span style="color: #fff; font-size: 14px;">Untuk konfirmasi transfer ke nomor: <strong>089677203048</strong></span>
+            </div>
+        </form>
+    </div>
+    
+    <div id="tab-doa" class="tab-content">
+        <div class="sub-menu-container">
+            
+            <button class="btn-option" onclick="toggleBacaan('wirid-maktubbah')">1. Wirid Sholat Maktubbah</button>
+            <div id="wirid-maktubbah" class="bacaan-content">
+                <div class="arabic">أَسْتَغْفِرُ اللهَ الْعَظِيمَ ×٣</div>
+                <div class="arti">"Aku memohon ampun kepada Allah Yang Maha Agung." (3x)</div>
+            </div>
+            
+            <button class="btn-option" onclick="toggleBacaan('wirid-mujahadah')">2. Wirid Mujahadah</button>
+            <div id="wirid-mujahadah" class="bacaan-content">
+                <div class="arabic">يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ</div>
+                <div class="arti">"Wahai Dzat Yang Maha Hidup lagi Maha Berdiri Sendiri, dengan rahmat-Mu aku memohon pertolongan."</div>
+            </div>
+            
+            <button class="btn-option" onclick="toggleBacaan('bacaan-tahlil')">3. Tahlil</button>
+            <div id="bacaan-tahlil" class="bacaan-content">
+                <div class="arabic">لَا إِلَهَ إِلَّا اللهُ مُحَمَّدٌ رَسُولُ اللهِ</div>
+                <div class="arti">"Tiada Tuhan selain Allah, Nabi Muhammad adalah utusan Allah."</div>
+            </div>
+            
         </div>
-    </form>
-
-    <table id="tabelData">
-        <thead>
-            <tr>
-                <th>Nama</th>
-                <th>Alamat (Privat)</th>
-                <th>Nomor Telepon</th>
-                <th>Donasi</th>
-            </tr>
-        </thead>
-        <tbody>
-            </tbody>
-    </table>
+    </div>
 </div>
 
 <script>
-    let kumpulanData = [];
+    // Menyimpan data profil sementara sebelum dikirim bersama nominal donasi
+    let dataProfilSementara = null;
 
-    function buatSensorAlamat(alamat) {
-        if (alamat.length <= 5) {
-            return "••••••••";
+    // FUNGSI NAVIGASI TIGA MENU UTAMA
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(item => item.classList.remove('active'));
+        
+        document.getElementById('tab-' + tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // FUNGSI DROP-DOWN PADA MENU WIRID
+    function toggleBacaan(idKonten) {
+        const konten = document.getElementById(idKonten);
+        const tombol = event.currentTarget;
+        
+        if (konten.style.display === "block") {
+            konten.style.display = "none";
+            tombol.classList.remove('active');
+        } else {
+            document.querySelectorAll('.bacaan-content').forEach(item => item.style.display = "none");
+            document.querySelectorAll('.btn-option').forEach(item => item.classList.remove('active'));
+            konten.style.display = "block";
+            tombol.classList.add('active');
         }
-        return alamat.substring(0, 5) + " ••••••••";
     }
 
-    // Fungsi format rupiah untuk tampilan tabel agar rapi
-    function formatRupiah(angka) {
-        return "Rp " + parseInt(angka).toLocaleString('id-ID');
-    }
-
-    function tambahData() {
+    // FUNGSI UTK TOMBOL "SIMPAN PROFIL"
+    function simpanProfilSementara() {
         const nama = document.getElementById('nama').value.trim();
         const alamat = document.getElementById('alamat').value.trim();
         const telepon = document.getElementById('telepon').value.trim();
-        const donasi = document.getElementById('donasi').value.trim();
 
-        if (nama === '' || alamat === '' || telepon === '' || donasi === '') {
-            alert('Mohon lengkapi seluruh kolom input terlebih dahulu!');
+        if (nama === '' || alamat === '' || telepon === '') {
+            alert('Mohon isi lengkap Nama, Alamat, dan Telepon Anda pada Menu Update Data!');
             return;
         }
 
-        kumpulanData.push({
-            "Nama": nama,
-            "Alamat": alamat,
-            "Nomor Telepon": telepon,
-            "Jumlah Donasi": parseInt(donasi)
-        });
-
-        const alamatSensor = buatSensorAlamat(alamat);
-        const donasiFormat = formatRupiah(donasi);
-        const tbody = document.querySelector('#tabelData tbody');
-        const row = `<tr>
-            <td>${nama}</td>
-            <td class="sensor-text">${alamatSensor}</td>
-            <td>'${telepon}</td> 
-            <td>${donasiFormat}</td> 
-        </tr>`;
-        
-        tbody.innerHTML += row;
-        document.getElementById('dataForm').reset();
+        dataProfilSementara = { nama, alamat, telepon };
+        alert('Profil berhasil disimpan! Silakan berpindah ke "2. Menu Donasi" untuk memasukkan nominal.');
+        switchTab('donasi'); // Otomatis mengarahkan user ke tab donasi
+        document.querySelectorAll('.tab-btn')[1].focus();
     }
 
-    function unduhExcel() {
-        if (kumpulanData.length === 0) {
-            alert('Tidak ada data yang tersedia untuk diunduh!');
+    // FUNGSI PROSES KIRIM DONASI KE GOOGLE SHEETS
+    const WEB_APP_URL = https://script.google.com/macros/s/AKfycbz92bElZMxOJ3vcu7z1F2B4jIDzdez58otMWMV1W0Mt/dev;
+
+    function prosesKirimDonasi() {
+        const donasi = document.getElementById('donasi').value.trim();
+
+        if (!dataProfilSementara) {
+            alert('Anda belum mengisi profil! Silakan isi terlebih dahulu di menu "1. Update Data".');
+            switchTab('update-data');
             return;
         }
 
-        const worksheet = XLSX.utils.json_to_sheet(kumpulanData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Data Donasi");
+        if (donasi === '') {
+            alert('Mohon masukkan nominal donasi Anda!');
+            return;
+        }
 
-        XLSX.writeFile(workbook, "Data_Donasi_Zanjabil.xlsx");
+        // Gabungkan data profil dan data donasi
+        const dataFinal = {
+            ...dataProfilSementara,
+            donasi: parseInt(donasi)
+        };
 
-        // Pembersihan memori untuk privasi setelah berhasil download
-        kumpulanData = []; 
-        document.querySelector('#tabelData tbody').innerHTML = '';
-        alert('Ekspor Berhasil! Seluruh data di memori browser telah dibersihkan demi privasi keamanan.');
+        // Mengirim ke server Google Sheets di background
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dataFinal)
+        })
+        .then(() => {
+            alert('Alhamdulillah, data donasi Anda berhasil terkirim secara privat. Silakan lakukan konfirmasi transfer.');
+            
+            // Reset form dan memori
+            document.getElementById('formUpdateData').reset();
+            document.getElementById('formDonasi').reset();
+            dataProfilSementara = null;
+            
+            // Kembalikan ke halaman utama/awal
+            switchTab('update-data');
+        })
+        .catch(error => {
+            alert('Terjadi kendala jaringan saat mengirim data.');
+            console.error(error);
+        });
     }
 </script>
 
