@@ -90,7 +90,6 @@
             display: block;
         }
         
-        /* STYLE INPUT FORM */
         .form-group {
             margin-bottom: 20px;
         }
@@ -239,7 +238,7 @@
                 <label for="telepon">Nomor Telepon / WA</label>
                 <input type="tel" id="telepon" required placeholder="Contoh: 08123456789" autocomplete="off">
             </div>
-            <button type="button" class="btn-action" onclick="simpanProfil Sementara()">Simpan Profil</button>
+            <button type="button" class="btn-action" onclick="simpanProfilSementara()">Simpan Profil</button>
         </form>
     </div>
     
@@ -286,19 +285,18 @@
 </div>
 
 <script>
-    // Menyimpan data profil sementara sebelum dikirim bersama nominal donasi
     let dataProfilSementara = null;
 
-    // FUNGSI NAVIGASI TIGA MENU UTAMA
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(item => item.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(item => item.classList.remove('active'));
         
         document.getElementById('tab-' + tabName).classList.add('active');
-        event.currentTarget.classList.add('active');
+        // Mencari elemen tombol yang memicu event
+        const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabName));
+        if(targetBtn) targetBtn.classList.add('active');
     }
 
-    // FUNGSI DROP-DOWN PADA MENU WIRID
     function toggleBacaan(idKonten) {
         const konten = document.getElementById(idKonten);
         const tombol = event.currentTarget;
@@ -314,7 +312,6 @@
         }
     }
 
-    // FUNGSI UTK TOMBOL "SIMPAN PROFIL"
     function simpanProfilSementara() {
         const nama = document.getElementById('nama').value.trim();
         const alamat = document.getElementById('alamat').value.trim();
@@ -326,13 +323,14 @@
         }
 
         dataProfilSementara = { nama, alamat, telepon };
-        alert('Profil berhasil disimpan! Silakan berpindah ke "2. Menu Donasi" untuk memasukkan nominal.');
-        switchTab('donasi'); // Otomatis mengarahkan user ke tab donasi
-        document.querySelectorAll('.tab-btn')[1].focus();
+        alert('Profil berhasil disimpan! Silakan masukkan nominal pada Menu Donasi.');
+        switchTab('donasi');
     }
 
-    // FUNGSI PROSES KIRIM DONASI KE GOOGLE SHEETS
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykw2fZeMfIwgbIFDTKaoOrMPAAb1oePL_VqsaKyPEq17V7QcQ9Q2rTnog6X8S5N2gAdQ/exec";
+    // ==============================================================
+    // TEMPELKAN URL GOOGLE SCRIPT (WEB APP) ANDA YANG UTUH DI SINI:
+    // ==============================================================
+    const WEB_APP_URL = "const WEB_APP_URL = "script.google.com/macros/s/AKfycybkw2fZeMflwgblFDTKaoOrMPAAb1oePL_VqsaKyPEq17v7QcQ9Q2rTnog6";";
 
     function prosesKirimDonasi() {
         const donasi = document.getElementById('donasi').value.trim();
@@ -348,28 +346,31 @@
             return;
         }
 
-        // Gabungkan data profil dan data donasi
         const dataFinal = {
             ...dataProfilSementara,
             donasi: parseInt(donasi)
         };
 
-        // Mengirim ke server Google Sheets di background
+        // Format pengiriman URL Encoded anti-blokir browser
+        const formUrlEncoded = new URLSearchParams();
+        formUrlEncoded.append("nama", dataFinal.nama);
+        formUrlEncoded.append("alamat", dataFinal.alamat);
+        formUrlEncoded.append("telepon", dataFinal.telepon);
+        formUrlEncoded.append("donasi", dataFinal.donasi);
+
         fetch(WEB_APP_URL, {
             method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dataFinal)
+            mode: "no-cors", 
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formUrlEncoded.toString()
         })
         .then(() => {
-            alert('Alhamdulillah, data donasi Anda berhasil terkirim secara privat. Silakan lakukan konfirmasi transfer.');
-            
-            // Reset form dan memori
+            alert('Alhamdulillah, data donasi Zanjabil berhasil terkirim secara privat!');
             document.getElementById('formUpdateData').reset();
             document.getElementById('formDonasi').reset();
             dataProfilSementara = null;
-            
-            // Kembalikan ke halaman utama/awal
             switchTab('update-data');
         })
         .catch(error => {
