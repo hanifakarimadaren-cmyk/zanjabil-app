@@ -292,8 +292,9 @@
         document.querySelectorAll('.tab-btn').forEach(item => item.classList.remove('active'));
         
         document.getElementById('tab-' + tabName).classList.add('active');
-        // Mencari elemen tombol yang memicu event
-        const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabName));
+        
+        // Cari tombol navigasi yang sesuai untuk diberi efek aktif
+        const targetBtn = Array.from(document.querySelectorAll('.tab-menu button')).find(btn => btn.getAttribute('onclick').includes(tabName));
         if(targetBtn) targetBtn.classList.add('active');
     }
 
@@ -323,14 +324,15 @@
         }
 
         dataProfilSementara = { nama, alamat, telepon };
-        alert('Profil berhasil disimpan! Silakan masukkan nominal pada Menu Donasi.');
+        alert('Profil berhasil disimpan! Halaman dialihkan ke "Menu Donasi" untuk pengisian nominal.');
         switchTab('donasi');
     }
 
     // ==============================================================
     // TEMPELKAN URL GOOGLE SCRIPT (WEB APP) ANDA YANG UTUH DI SINI:
     // ==============================================================
-    const WEB_APP_URL = "const WEB_APP_URL = "https:script.google.com/macros/s/AKfycbwkj5jzBhYy3VDtIxCtXZjrVnNDteckUOygHL51eGfWFnvVc6uchGqERoC-VTYg0PNP-w/exec
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycybkw2fZeMflwgblFDTKaoOrMPAAb1oePL_VqsaKyPEq17v7QcQ9Q2rTnog6X8S5N2gAdQ/exec";
+
     function prosesKirimDonasi() {
         const donasi = document.getElementById('donasi').value.trim();
 
@@ -350,7 +352,6 @@
             donasi: parseInt(donasi)
         };
 
-        // Format pengiriman URL Encoded anti-blokir browser
         const formUrlEncoded = new URLSearchParams();
         formUrlEncoded.append("nama", dataFinal.nama);
         formUrlEncoded.append("alamat", dataFinal.alamat);
