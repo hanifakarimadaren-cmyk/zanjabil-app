@@ -249,15 +249,7 @@
                 <input type="number" id="donasi" required placeholder="Masukkan nominal angka (Contoh: 50000)" autocomplete="off">
             </div>
             
-            <button type="button" class="btn-action" onclick="prosesKirimDonasi()">Kirim</button>
-            <div class="catatan-konfirmasi">
-                <strong>INFORMASI TRANSFER:</strong><br>
-                Silakan transfer sesuai nominal ke rekening lembaga.<br>
-                <span style="color: #fff; font-size: 14px;">Untuk konfirmasi TF silahkan klik tombol di bawah ini</span>
-            </div>
-            <button type="button" class="btn-action" onclick="openWa()">Konfirmasi</button>
-
-            
+            <button id="buttonKirim" type="button" class="btn-action" onclick="prosesKirimDonasi()">Kirim</button>
         </form>
     </div>
     
@@ -337,6 +329,7 @@
 
     function prosesKirimDonasi() {
         const donasi = document.getElementById('donasi').value.trim();
+        document.getElemenetById("buttonKirim").disabled = true;
 
         if (!dataProfilSementara) {
             alert('Anda belum mengisi profil! Silakan isi terlebih dahulu di menu "1. Update Data".');
@@ -373,10 +366,13 @@
             document.getElementById('formUpdateData').reset();
             document.getElementById('formDonasi').reset();
             dataProfilSementara = null;
+            window.location.href = "https://wa.me/087776967156";
             switchTab('update-data');
+            document.getElemenetById("buttonKirim").disabled = false;
         })
         .catch(error => {
             alert('Terjadi kendala jaringan saat mengirim data.');
+            document.getElementById("buttonKirim").disabled = false;
             console.error(error);
         });
     }
