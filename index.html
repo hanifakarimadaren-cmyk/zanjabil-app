@@ -238,7 +238,7 @@
                 <label for="telepon">Nomor Telepon / WA</label>
                 <input type="tel" id="telepon" required placeholder="Contoh: 08123456789" autocomplete="off">
             </div>
-            <button type="button" class="btn-action" onclick="simpanProfilSementara()"</button>
+            <button type="button" class="btn-action" onclick="simpanProfilSementara()">Isi Data</button>
         </form>
     </div>
     
@@ -249,13 +249,15 @@
                 <input type="number" id="donasi" required placeholder="Masukkan nominal angka (Contoh: 50000)" autocomplete="off">
             </div>
             
-            <button type="button" class="btn-action" onclick="prosesKirimDonasi()">Kirim & Konfirmasi</button>
-
+            <button type="button" class="btn-action" onclick="prosesKirimDonasi()">Kirim</button>
             <div class="catatan-konfirmasi">
                 <strong>INFORMASI TRANSFER:</strong><br>
                 Silakan transfer sesuai nominal ke rekening lembaga.<br>
-                <span style="color: #fff; font-size: 14px;">Untuk konfirmasi transfer ke nomor: <strong>089677203048</strong></span>
+                <span style="color: #fff; font-size: 14px;">Untuk konfirmasi TF silahkan klik tombol di bawah ini</span>
             </div>
+            <button type="button" class="btn-action" onclick="openWa()">Konfirmasi</button>
+
+            
         </form>
     </div>
     
@@ -377,6 +379,9 @@
             alert('Terjadi kendala jaringan saat mengirim data.');
             console.error(error);
         });
+    }
+    function openWa(){
+         window.location.href = "https://wa.me/087776967156";
     }
 </script>
 
