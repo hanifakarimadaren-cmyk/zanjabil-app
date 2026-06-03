@@ -329,7 +329,7 @@
 
     function prosesKirimDonasi() {
         const donasi = document.getElementById('donasi').value.trim();
-        document.getElemenetById("buttonKirim").disabled = true;
+        document.getElementById("buttonKirim").disabled = true;
 
         if (!dataProfilSementara) {
             alert('Anda belum mengisi profil! Silakan isi terlebih dahulu di menu "1. Update Data".');
@@ -368,7 +368,7 @@
             dataProfilSementara = null;
             window.location.href = "https://wa.me/087776967156";
             switchTab('update-data');
-            document.getElemenetById("buttonKirim").disabled = false;
+            document.getElementById("buttonKirim").disabled = false;
         })
         .catch(error => {
             alert('Terjadi kendala jaringan saat mengirim data.');
